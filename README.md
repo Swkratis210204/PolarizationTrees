@@ -75,9 +75,18 @@ pool.summarize(dataset, bias_config, text_id=0)
 results = pool.analyze(dataset, bias_config)  # raw nDFU scores
 # results[text_id]["overall"]      -> float
 # results[text_id][dim][value]     -> float
+
+pool.summarize_all(dataset, bias_config)
+# Overall nDFU — mean: 0.721  min: 0.431  max: 0.963  (across 100 texts)
+#
+# gender (polarizing):
+#   male            mean: 0.312  min: 0.077  max: 0.833
+#   female          mean: 0.541  min: 0.083  max: 0.917
+#   non-binary      mean: 0.448  min: 0.067  max: 0.916
+# ...
 ```
 
-`analyze()` and `summarize()` require `pip install "polarizedtrees[ndfu]"`.
+`analyze()`, `summarize()`, and `summarize_all()` require `pip install "polarizedtrees[ndfu]"`.
 
 ## Dimensions
 

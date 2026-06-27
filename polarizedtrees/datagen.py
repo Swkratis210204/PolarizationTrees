@@ -350,3 +350,33 @@ class AnnotatorPool:
             for value, score in values.items():
                 print(f"  {value}: {score:.3f}")
             print()
+
+    def summarize_all(self, dataset, bias_config):
+        """
+        Print mean nDFU per dimension value, aggregated across all texts.
+
+        Gives a compact cross-text view: instead of per-text scores, each
+        dimension value shows its average nDFU and the spread (min–max).
+        Useful for seeing which demographic groups consistently disagree
+        more across the whole dataset.
+
+        Calls analyze() internally. Requires `ndfu`.
+        """
+        results = self.analyze(dataset, bias_config)
+        n_texts = len(results)
+
+        overall_scores = [results[t]["overall"] for t in results]
+        print(f"Overall nDFU — mean: {np.mean(overall_scores):.3f}  "
+              f"min: {np.min(overall_scores):.3f}  "
+              f"max: {np.max(overall_scores):.3f}  "
+              f"(across {n_texts} texts)\n")
+
+        for dim in self.active_dims:
+            role = bias_config[dim]["role"]
+            print(f"{dim} ({role}):")
+            for value in self.active_dims[dim]:
+                scores = [results[t][dim][value] for t in results if value in results[t][dim]]
+                print(f"  {value:<15} mean: {np.mean(scores):.3f}  "
+                      f"min: {np.min(scores):.3f}  "
+                      f"max: {np.max(scores):.3f}")
+            print()
