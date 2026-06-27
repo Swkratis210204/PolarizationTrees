@@ -5,3 +5,4 @@ polarizedtrees.ipynb
 *.egg-info/
 __pycache__/
 dist/
+PyPicodes.txt

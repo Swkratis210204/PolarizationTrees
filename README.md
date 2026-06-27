@@ -45,13 +45,16 @@ can be validated against known ground truth.
 ## Install
 
 ```bash
-# from GitHub (no PyPI release yet)
-pip install git+https://github.com/your-username/polarizedtrees.git
-
-# local development
-pip install -e .
+pip install polarizedtrees
 
 # with nDFU support (needed for the demo notebook)
+pip install "polarizedtrees[ndfu]"
+```
+
+For development:
+```bash
+git clone https://github.com/SwkratisCS/polarizedtrees.git
+cd polarizedtrees
 pip install -e ".[ndfu]"
 ```
 
