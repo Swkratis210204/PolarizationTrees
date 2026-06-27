@@ -242,21 +242,55 @@ class AnnotatorPool:
 
         bias_config = self._generate_bias_config(polarizing_prob)
 
-        records = []
+        # Precompute vote lookup for each polarizing dimension:
+        # maps annotator value → "toxic" | "civil"
+        vote_maps = {}
+        unimodal_fallback = None
+        for dim, config in bias_config.items():
+            if config["role"] == "polarizing":
+                vote_maps[dim] = (
+                    {v: "toxic" for v in config["toxic_pole"]}
+                    | {v: "civil" for v in config["civil_pole"]}
+                )
+            elif unimodal_fallback is None:
+                unimodal_fallback = config["convergence"]
+
+        frames = []
         for text_id in range(n_texts):
             sampled = self.pool.sample(n=n_annotators_per_text, replace=False)
-            for annotator_id, annotator in sampled.iterrows():
-                rating = self._annotate(annotator, bias_config, noise)
-                records.append(
-                    {
-                        "text_id": text_id,
-                        "annotator_id": annotator_id,
-                        **annotator.to_dict(),
-                        "rating": rating,
-                    }
-                )
 
-        return pd.DataFrame(records), bias_config
+            if vote_maps:
+                # Vectorised majority vote across all polarizing dimensions
+                toxic = np.zeros(len(sampled), dtype=np.int32)
+                civil = np.zeros(len(sampled), dtype=np.int32)
+                for dim, vmap in vote_maps.items():
+                    mapped = sampled[dim].map(vmap)
+                    toxic += (mapped == "toxic").values
+                    civil += (mapped == "civil").values
+                label = np.where(toxic > civil, 0,
+                         np.where(civil > toxic, 1, 2))  # 0=toxic,1=civil,2=neutral
+            else:
+                fb = {"toxic": 0, "civil": 1, "neutral": 2}[unimodal_fallback or "neutral"]
+                label = np.full(len(sampled), fb, dtype=np.int32)
+
+            # Draw ratings from the appropriate range per label
+            ranges = [self.toxic_range, self.civil_range, self.neutral_range]
+            ratings = np.array([
+                np.random.randint(ranges[l][0], ranges[l][1] + 1) for l in label
+            ])
+
+            # Inject noise
+            noise_mask = np.random.random(len(sampled)) < noise
+            ratings[noise_mask] = np.random.randint(1, self.scale + 1, noise_mask.sum())
+
+            frame = sampled.copy()
+            frame.insert(0, "text_id", text_id)
+            frame["rating"] = ratings
+            frames.append(frame)
+
+        dataset = pd.concat(frames)
+        dataset.index.name = "annotator_id"
+        return dataset, bias_config
 
     # ------------------------------------------------------------------
     # Convenience / diagnostics
