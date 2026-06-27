@@ -6,15 +6,35 @@ build-backend = "setuptools.backends.legacy:build"
 name = "polarizedtrees"
 version = "0.1.0"
 description = "Synthetic annotation datasets and polarization detection for human label studies"
+readme = "README.md"
 requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "SwkratisCS", email = "swkratisgiannoutsos@gmail.com" }
+]
+keywords = ["annotation", "polarization", "synthetic data", "nlp", "disagreement"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 dependencies = [
     "numpy",
     "pandas",
 ]
 
 [project.optional-dependencies]
-ndfu = ["ndfu"]          # for nDFU analysis in the demo notebook
-dev  = ["pytest"]
+ndfu = ["ndfu"]
+dev  = ["pytest", "build", "twine"]
+
+[project.urls]
+Repository = "https://github.com/SwkratisCS/polarizedtrees"
 
 [tool.setuptools.packages.find]
 where = ["."]
