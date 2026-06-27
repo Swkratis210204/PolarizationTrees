@@ -84,8 +84,8 @@ pool = AnnotatorPool({
 # 6 identities → 60 annotators
 ```
 
-## Known limitations
+<!-- ## Known limitations
 
 - **Balanced splits** — the pole assignment produces roughly 50/50 toxic/civil splits; real polarization is often asymmetric.
 - **No interaction effects** — dimensions contribute independently; a specific value *combination* cannot carry disproportionate weight.
-- **Single bias config per call** — all texts share one polarization structure; call `generate_dataset()` separately per topic to vary this.
+- **Single bias config per call** — all texts share one polarization structure; call `generate_dataset()` separately per topic to vary this. -->
