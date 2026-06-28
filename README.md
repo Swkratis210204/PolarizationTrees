@@ -1,6 +1,7 @@
 # toxpol-nlp
 
 ![Python](https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11%20|%203.12-blue)
+[![PyPI](https://img.shields.io/pypi/v/toxpol-nlp)](https://pypi.org/project/toxpol-nlp/)
 
 
 
