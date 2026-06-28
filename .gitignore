@@ -4,3 +4,4 @@ __pycache__/
 dist/
 PyPicodes.txt
 *.pdf
+PYPI_README.md
