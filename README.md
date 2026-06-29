@@ -38,3 +38,6 @@ The Polarized Trees detection algorithm. Given an annotation dataset, it identif
 | `toxpol.datagen` | Synthetic annotator pool with injected, ground-truth polarization | Stable |
 | `toxpol.trees` | Polarized Trees detection algorithm | Coming soon |
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
